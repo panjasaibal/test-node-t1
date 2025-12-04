@@ -3,11 +3,11 @@ require("dotenv").config();
 
 const AppDataSource = new DataSource({
   type: "mssql",
-  host: "app-db101.database.windows.net",
+  host: process.env.DB_HOST,
   port: 1433,
-  username: "saibal",
+  username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,  
-  database: "app-db",
+  database: process.env.DB_NAME,
   synchronize: true, // ❗ set false in production
   logging: false,
   extra: {
