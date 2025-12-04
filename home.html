@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home | Auth Server</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex items-center justify-center p-6">
+  <div class="max-w-3xl w-full bg-white shadow-lg rounded-2xl p-8">
+    <h1 class="text-3xl font-bold mb-4 text-blue-600 text-center">JWT Auth Server — API Demo & Documentation</h1>
+    <p class="text-gray-600 mb-6 text-center">
+      Explore how each API works, what payloads they accept, and sample responses.
+    </p>
+
+    <!-- AUTH SECTION -->
+    <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-3">🔐 Authentication APIs</h2>
+
+    <!-- REGISTER -->
+    <div class="mb-6 p-4 bg-gray-50 rounded-xl border">
+      <h3 class="text-xl font-semibold text-blue-500">POST /auth/register</h3>
+      <p class="text-gray-700 mt-2">Registers a new user.</p>
+
+      <h4 class="font-medium mt-3">Payload:</h4>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm overflow-auto">{
+  "username": "alice",
+  "password": "password123"
+}</pre>
+
+      <h4 class="font-medium mt-3">Response:</h4>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm overflow-auto">{
+  "message": "User registered successfully",
+  "userId": "uuid-value"
+}</pre>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="mb-6 p-4 bg-gray-50 rounded-xl border">
+      <h3 class="text-xl font-semibold text-blue-500">POST /auth/login</h3>
+      <p class="text-gray-700 mt-2">Logs the user in and sets a HttpOnly refresh token cookie.</p>
+
+      <h4 class="font-medium mt-3">Payload:</h4>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm">{
+  "username": "alice",
+  "password": "password123"
+}</pre>
+
+      <h4 class="font-medium mt-3">Response:</h4>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm">{
+  "accessToken": "your_jwt_token"
+}</pre>
+    </div>
+
+    <!-- REFRESH -->
+    <div class="mb-6 p-4 bg-gray-50 rounded-xl border">
+      <h3 class="text-xl font-semibold text-yellow-600">GET /auth/refresh</h3>
+      <p class="text-gray-700">Issues a new access token using refresh token cookie.</p>
+
+      <h4 class="font-medium mt-3">Response:</h4>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm">{
+  "accessToken": "new_access_token"
+}</pre>
+    </div>
+
+    <!-- LOGOUT -->
+    <div class="mb-6 p-4 bg-gray-50 rounded-xl border">
+      <h3 class="text-xl font-semibold text-red-500">POST /auth/logout</h3>
+      <p class="text-gray-700">Clears refresh token cookie and logs out user.</p>
+
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm mt-3">{
+  "message": "Logged out successfully"
+}</pre>
+    </div>
+
+    <!-- ITEMS SECTION -->
+    <h2 class="text-2xl font-semibold text-gray-800 mt-10 mb-3">📦 Items API (CRUD)</h2>
+
+    <!-- GET ALL -->
+    <div class="mb-6 p-4 bg-gray-50 rounded-xl border">
+      <h3 class="text-xl font-semibold text-green-600">GET /items</h3>
+      <p class="text-gray-700">Fetch all items (public).</p>
+
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm mt-3">[
+  { "id": 1, "name": "Item One" },
+  { "id": 2, "name": "Item Two" }
+]</pre>
+    </div>
+
+    <!-- CREATE ITEM -->
+    <div class="mb-6 p-4 bg-gray-50 rounded-xl border">
+      <h3 class="text-xl font-semibold text-purple-600">POST /items</h3>
+      <p class="text-gray-700">Create a new item (requires access token).</p>
+
+      <h4 class="font-medium mt-3">Payload:</h4>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm">{
+  "name": "New Item"
+}</pre>
+
+      <h4 class="font-medium mt-3">Response:</h4>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-sm">{
+  "message": "Item created",
+  "id": 3
+}</pre>
+    </div>
+
+    <footer class="mt-10 text-center text-sm text-gray-500">JWT Auth Server • API Documentation Demo</footer>
+  </div>
+    <h1 class="text-3xl font-bold mb-4 text-blue-600">Welcome to the JWT Auth Server</h1>
+    <p class="text-gray-600 mb-6">
+      This is a simple UI page served from <strong>/home</strong>.<br />
+      You can integrate this with your API routes for login, register, etc.
+    </p>
+
+    <div class="flex flex-col gap-4">
+      <a href="/auth/register" class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition">Register</a>
+      <a href="/auth/login" class="w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition">Login</a>
+      <a href="/items" class="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-xl font-medium transition">View Items</a>
+    </div>
+
+    <footer class="mt-8 text-sm text-gray-500">JWT Auth Server UI • TailwindCSS</footer>
+  </div>
+</body>
+</html>
