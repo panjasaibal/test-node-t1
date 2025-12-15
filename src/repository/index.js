@@ -1,9 +1,8 @@
-const { AppDataSource } = require('../data-source');
+const { createConnectionToAzureDb } = require('../db/connection');
 const User = require('../entity/User')
 
-const usersRepository = ()=>{
-    
-    return AppDataSource.getRepository(User);
+const usersRepository = async()=>{
+    return (await createConnectionToAzureDb()).getRepository(User);
 }
 
 module.exports = usersRepository;

@@ -7,11 +7,8 @@ const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
-const sql = require('mssql');
-const { AppDataSource } = require('./src/data-source');
-const { createConnectionToAzureDb } = require('./src/db/connection');
+const { createConnectionToAzureDb, testConnectionToAzureDb } = require('./src/db/connection');
 const usersRepository = require('./src/repository');
-
 
 const app = express();
 
@@ -25,17 +22,11 @@ const ACCESS_TOKEN_EXPIRY = '15m'; // short-lived access token
 const REFRESH_TOKEN_EXPIRY_SECONDS = 60 * 60 * 24 * 7; // 7 days
 const PORT = process.env.PORT || 4000;
 
-// === In-memory "DB" ===
-const users = []; // { id, username, passwordHash }
 const refreshTokens = new Map(); // refreshToken -> { userId, expiresAt }
 
-try {
-  createConnectionToAzureDb();
-} catch (error) {
-  console.error("Failed to connect to database, ", error);
-}
 
-const usersRepo = usersRepository()
+
+let usersRepo;
 // === Helpers ===
 function createAccessToken(user) {
   return jwt.sign({ sub: user.id, username: user.username }, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
@@ -82,7 +73,6 @@ app.post('/auth/register', async (req, res) => {
 app.post('/auth/login', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'username and password required' });
-
   const user = await usersRepo.findOneBy({ username });
   if (!user) return res.status(401).json({ error: 'invalid credentials' });
 
@@ -198,7 +188,19 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'home.html'));
 });
 
+async function startServer() {
+  try {
+    await testConnectionToAzureDb();
+    usersRepo = usersRepository();
 
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Server startup failed:", err);
+    process.exit(1);
+  }
+}
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+startServer();
 
